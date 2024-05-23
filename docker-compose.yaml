@@ -1,9 +1,9 @@
-version: '3.1'
+version: "3.1"
 
 services:
-
   app1:
     image: wordpress
+    container_name: wordpress1
     ports:
       - 8081:80
     environment:
@@ -16,19 +16,34 @@ services:
       - wp-content-uploads:/var/www/html/wp-content/uploads
 
   app2:
-      image: wordpress
-      ports:
-        - 8082:80
-      environment:
-        WORDPRESS_DB_HOST: DP_HOST
-        WORDPRESS_DB_NAME: wordpress
-        WORDPRESS_DB_USER: wordpressuser
-        WORDPRESS_DB_PASSWORD: Saeed@19015357
-      volumes:
-        - /var/www/html/wp-content/:/var/www/html/wp-content/
-        - wp-content-uploads:/var/www/html/wp-content/uploads
-      depends_on:
-        - app1
+    image: wordpress
+    container_name: wordpress2
+    ports:
+      - 8082:80
+    environment:
+      WORDPRESS_DB_HOST: DP_HOST
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpressuser
+      WORDPRESS_DB_PASSWORD: Saeed@19015357
+    volumes:
+      - /var/www/html/wp-content/:/var/www/html/wp-content/
+      - wp-content-uploads:/var/www/html/wp-content/uploads
+    depends_on:
+      - wordpress1
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-wordpress
+    ports:
+      - 80:80
+    restart: unless-stopped
+    volumes:
+      - ./nginx-configuration/:/etc/nginx/conf.d/
+    depends_on:
+      wordpress1:
+        condition: service_healthy
+      wordpress2:
+        condition: service_healthy
 
 volumes:
   wp-content-uploads:

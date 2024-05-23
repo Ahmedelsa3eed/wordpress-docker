@@ -29,7 +29,7 @@ services:
       - /var/www/html/wp-content/:/var/www/html/wp-content/
       - wp-content-uploads:/var/www/html/wp-content/uploads
     depends_on:
-      - wordpress1
+      - app1
 
   nginx:
     image: nginx:latest
@@ -40,8 +40,8 @@ services:
     volumes:
       - ./nginx-configuration/:/etc/nginx/conf.d/
     depends_on:
-      - wordpress1
-      - wordpress2
+      - app1
+      - app2
 
 volumes:
   wp-content-uploads:

@@ -40,10 +40,8 @@ services:
     volumes:
       - ./nginx-configuration/:/etc/nginx/conf.d/
     depends_on:
-      wordpress1:
-        condition: service_healthy
-      wordpress2:
-        condition: service_healthy
+      - wordpress1
+      - wordpress2
 
 volumes:
   wp-content-uploads:
